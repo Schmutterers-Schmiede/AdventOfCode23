@@ -1,6 +1,8 @@
 ﻿namespace AdventOfCode23.main;
 using AdventOfCode23;
+using AdventOfCode23.Day1;
 using AdventOfCode23.Day2;
+using AdventOfCode23.Day3;
 
 public class Program
 {
@@ -10,6 +12,11 @@ public class Program
         //Day1_Part2.Run();
 
         //Day2_Part1.Run();
-        Day2_Part2.Run();
+        //Day2_Part2.Run();
+
+        //Day3_Part1.Run();
+        Day3_Part2.Run();
     }
+
+
 }
