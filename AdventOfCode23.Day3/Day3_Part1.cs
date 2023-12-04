@@ -7,8 +7,11 @@ namespace AdventOfCode23.Day3
     {
         private static char[][] grid;
         public static void Run()
-        {            
-            string[] lines = File.ReadAllLines("F:\\Coding\\adventOfCode\\AdventOfCode23\\AdventOfCode23.Day3\\input1.txt");
+        {
+            StringBuilder path = new StringBuilder();
+            path.Append(AppDomain.CurrentDomain.BaseDirectory);
+            path.Append("../../../../AdventOfCode23.Day3/input1.txt");
+            string[] lines = File.ReadAllLines(path.ToString());
             grid = new char[lines.Length][];
             for (int i = 0; i < lines.Length; i++)
             {

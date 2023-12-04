@@ -1,10 +1,15 @@
-﻿namespace AdventOfCode23.Day2;
+﻿using System.Text;
+
+namespace AdventOfCode23.Day2;
 
 public class Day2_Part2
 {
     public static void Run()
     {
-        StreamReader sr = new StreamReader("F:\\Coding\\adventOfCode\\AdventOfCode23\\AdventOfCode23.Day2\\input1.txt");
+        StringBuilder path = new StringBuilder();
+        path.Append(AppDomain.CurrentDomain.BaseDirectory);
+        path.Append("../../../../AdventOfCode23.Day2/input2.txt");
+        StreamReader sr = new StreamReader(path.ToString());
 
         int lineResult;
         int result = 0;

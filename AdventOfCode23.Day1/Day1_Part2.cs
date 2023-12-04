@@ -18,7 +18,10 @@ namespace AdventOfCode23.Day1
             int lineNr = 1;
             try
             {
-                StreamReader sr = new StreamReader("F:\\Coding\\adventOfCode\\AdventOfCode23\\AdventOfCode23.Day1\\input2.txt");
+                StringBuilder path = new StringBuilder();
+                path.Append(AppDomain.CurrentDomain.BaseDirectory);
+                path.Append("../../../../AdventOfCode23.Day1/input2.txt");
+                StreamReader sr = new StreamReader(path.ToString());
                 while (!sr.EndOfStream)
                 {
                     line = sr.ReadLine().ToLower();
