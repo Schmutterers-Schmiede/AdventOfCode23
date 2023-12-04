@@ -18,7 +18,8 @@ public class Program
         //Day3_Part1.Run();
         //Day3_Part2.Run();
 
-        Day4_Part1.Run();
+        //Day4_Part1.Run();
+        Day4_Part2.Run();
     }
 
 
