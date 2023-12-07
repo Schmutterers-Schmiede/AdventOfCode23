@@ -6,6 +6,7 @@ using AdventOfCode23.Day3;
 using AdventOfCode23.Day4;
 using AdventOfCode23.Day5;
 using AdventOfCode23.Day6;
+using AdventOfCode23.Day7;
 
 public class Program
 {
@@ -26,7 +27,11 @@ public class Program
         //Day5_Part1.Run();
         //Day5_Part2.Run();
 
-        Day6_Part2.Run();
+        //Day6_Part1.Run();
+        //Day6_Part2.Run();
+
+        //Day7_Part1.Run();
+        Day7_Part2.Run();
     }
 
 

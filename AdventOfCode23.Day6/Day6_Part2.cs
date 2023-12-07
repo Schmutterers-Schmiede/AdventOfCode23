@@ -50,7 +50,7 @@ namespace AdventOfCode23.Day6
 
         private static long GetNumberFromString(string line)
         {
-            string afterRegex = Regex.Replace(Regex.Replace(line, "[A-Z][a-z]*: *", ""), " +", "");           
+            string afterRegex = Regex.Replace(Regex.Replace(line, "[A-Z][a-z]*: *", ""), " +", "");          
             return long.Parse(afterRegex);
         }
     }
