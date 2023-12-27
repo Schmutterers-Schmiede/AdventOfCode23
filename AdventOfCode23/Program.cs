@@ -14,7 +14,7 @@ using AdventOfCode23.Day11;
 using AdventOfCode23.Day12;
 using AdventOfCode23.Day13;
 using AdventOfCode23.Day14;
-
+using AdventOfCode23.Day15;
 public class Program
 {
     private static void Main(string[] args)
@@ -59,7 +59,10 @@ public class Program
         //Day13_Part2.Run();
 
         //Day14_Part1.Run();
-        Day14_Part2.Run();
+        //Day14_Part2.Run();
+
+        //Day15_Part1.Run();
+        Day15_Part2.Run();
 
     }
 
