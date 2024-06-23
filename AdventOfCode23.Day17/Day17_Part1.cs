@@ -5,7 +5,7 @@
      * build graph from array
      * use an enum for directions
      * 
-     * create heuristic in graph via pythagoras          
+     * calculate heuristic value of each node: xDistance + yDistance * 2
      * 
      * main loop: 
      *  - get next node from q
@@ -39,6 +39,8 @@
             var heatloss = GetOverallHeatLoss();
             PrintPath();
             VisualizePath();
+
+            Console.WriteLine();
             Console.WriteLine($"Overall heat loss: {heatloss}");
         }
 
@@ -242,7 +244,7 @@
             {
                 for (int x = 0; x < input[y].Length; x++)
                 {
-                    city[y,x] = new CityBlock(Convert.ToInt32(input[y][x]) - '0', HeuristicValue(city.GetLength(1) - x, city.GetLength(0) - y) , x, y);
+                    city[y,x] = new CityBlock(Convert.ToInt32(input[y][x]) - '0', HeuristicValue(x, y) , x, y);
                 }
             }
 
@@ -282,8 +284,8 @@
 
         private static double HeuristicValue(int x, int y) 
         {
-            int xDistance = city.GetLength(1) - x;
-            int yDistance = city.GetLength(0) - y;
+            int xDistance = city.GetLength(1) - x - 1;
+            int yDistance = city.GetLength(0) - y - 1;
             return xDistance + (yDistance * 2);
             //return Math.Sqrt(Math.Pow(x, 2) + Math.Pow(y, 2));
         }       
