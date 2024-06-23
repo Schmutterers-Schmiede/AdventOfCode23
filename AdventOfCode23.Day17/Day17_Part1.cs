@@ -86,7 +86,7 @@
             var current = pathTable[destination.Position];
             while (current != null)
             {
-                Console.WriteLine($"(X {current.Block.Position.X} | Y {current.Block.Position.Y} ) - {current.Block.HeatLoss}");                
+                Console.WriteLine($"( X {current.Block.Position.X} | Y {current.Block.Position.Y} ) - {current.Block.HeatLoss}");                
                 current = current.Previous;
             }            
         }
@@ -208,6 +208,7 @@
             entryToUpdate.CostToReach = costToReach;
             entryToUpdate.DirectionCount = directionCount;
             entryToUpdate.DirectionToReach = directionToReach;
+            SortQ();
         }
 
         private static QEntry GetNextInQ()
@@ -290,6 +291,7 @@
 
         private static double HeuristicValue(int x, int y) 
         {
+            // return 0;
             int xDistance = city.GetLength(1) - x - 1;
             int yDistance = city.GetLength(0) - y - 1;            
             return Math.Sqrt(Math.Pow(xDistance, 2) + Math.Pow(yDistance, 2));
