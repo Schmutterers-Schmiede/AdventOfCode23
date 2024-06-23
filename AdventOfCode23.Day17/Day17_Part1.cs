@@ -5,7 +5,7 @@
      * build graph from array
      * use an enum for directions
      * 
-     * calculate heuristic value of each node: xDistance + yDistance * 2
+     * calculate heuristic value of each node using pythagorean theorem
      * 
      * main loop: 
      *  - get next node from q
@@ -55,12 +55,15 @@
                     map[y, x] = Convert.ToChar(city[y, x].HeatLoss + '0');
                 }
             }
-            var current = pathTable[destination.Position];            
-            do
+
+            var current = pathTable[destination.Position];
+            
+            map[0, 0] = 'X';
+            while (!current.Block.Equals(start))
             {
                 map[current.Block.Position.Y, current.Block.Position.X] = 'X';
                 current = current.Previous;
-            } while (!current.Block.Equals(start));
+            } 
 
             for (int y = 0;y < map.GetLength(0); y++)
             {
@@ -196,10 +199,10 @@
         }
 
         private static void UpdateQEntry(
-    CityBlock b,
-    int costToReach,
-    Directions directionToReach,
-    int directionCount)
+            CityBlock b,
+            int costToReach,
+            Directions directionToReach,
+            int directionCount)
         {
             var entryToUpdate = unvisitedQ.Where((QEntry e) => e.Block.Equals(b)).First();
             entryToUpdate.CostToReach = costToReach;
@@ -231,8 +234,11 @@
 
         private static void AddToQ(QEntry e)
         {
-            unvisitedQ.Add(e);
-            SortQ();
+            if(e.DirectionCount != 4)
+            {
+                unvisitedQ.Add(e);
+                SortQ();
+            }
         }
 
         static void Init()
@@ -285,9 +291,8 @@
         private static double HeuristicValue(int x, int y) 
         {
             int xDistance = city.GetLength(1) - x - 1;
-            int yDistance = city.GetLength(0) - y - 1;
-            return xDistance + (yDistance * 2);
-            //return Math.Sqrt(Math.Pow(x, 2) + Math.Pow(y, 2));
+            int yDistance = city.GetLength(0) - y - 1;            
+            return Math.Sqrt(Math.Pow(xDistance, 2) + Math.Pow(yDistance, 2));
         }       
 
         private static void PrintWithIndent(string message, int indentLevel)

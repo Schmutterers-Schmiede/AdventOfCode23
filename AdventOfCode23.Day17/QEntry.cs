@@ -26,7 +26,6 @@ namespace AdventOfCode23.Day17
             DirectionToReach = directionToReach;
             CostToReach = costToReach;
             DirectionCount = directionCount;
-            ReachedFrom = reachedFrom;
         }
         
         public double CombinedCost() 
