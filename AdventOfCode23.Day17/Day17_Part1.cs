@@ -1,67 +1,106 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Numerics;
-using System.Runtime.InteropServices.Marshalling;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace AdventOfCode23.Day17
+﻿namespace AdventOfCode23.Day17
 {
 
     /* GENERAL IDEA:
-     * build graph
-     * use integers to identify directions
+     * build graph from array
+     * use an enum for directions
+     * 
      * create heuristic in graph via pythagoras          
      * 
      * main loop: 
      *  - get next node from q
      *  
      *  - loop over edges
-     *      - skip if edge goes backward or direction count is 3 and edge continues in same direction
+     *      - skip if 
+     *          - edge goes backwards 
+     *          - direction count is 4 and edge continues in same direction
+     *          - node has already been processed
+     *          - no edge in that direction
      *      - add to or update in q:
      *          - is this node in the q? (check with position)
-     *              - if yes, update directionToReach, CostToReach and DirectionCount if 
-     *              - if not, just add it to q
-     *          - sort q
-     *              
-     *  - add current node to path or update if already present and cost to reach is lower
-     *       
+     *              - if yes, update directionToReach, CostToReach and DirectionCount if necessary
+     *              - if not, add it to q and sort q                 
+     *  - add current node to path
+     *  
+     *  A* explaination: https://www.youtube.com/watch?v=ySN5Wnu88nE
      */
     public class Day17_Part1
-    {        
+    {
+        static CityBlock[,] city;
         static CityBlock start;
         static CityBlock destination;
         static List<QEntry> unvisitedQ = new();
+        static Dictionary<(int, int), PathEntry> pathTable = new();
 
         public static void Run()
         {
             Init();
-            var pathTable = AStar();
-            var heatloss = GetOverallHeatLoss(pathTable);
+            AStar();
+            var heatloss = GetOverallHeatLoss();
+            PrintPath();
+            VisualizePath();
             Console.WriteLine($"Overall heat loss: {heatloss}");
         }
 
-        static int GetOverallHeatLoss(Dictionary<(int, int), PathEntry> dijkstraTable)
+        public static void VisualizePath()
+        {            
+            Console.WriteLine();
+            char[,] map = new char[city.GetLength(0), city.GetLength(1)];
+            for (int y = 0; y < city.GetLength(0); y++)
+            {
+                for (int x = 0; x < city.GetLength(1); x++)
+                {
+                    map[y, x] = Convert.ToChar(city[y, x].HeatLoss + '0');
+                }
+            }
+            var current = pathTable[destination.Position];            
+            do
+            {
+                map[current.Block.Position.Y, current.Block.Position.X] = 'X';
+                current = current.Previous;
+            } while (!current.Block.Equals(start));
+
+            for (int y = 0;y < map.GetLength(0); y++)
+            {
+                for(int x = 0;x < map.GetLength(1); x++)
+                {
+                    if (map[y,x] == 'X')
+                        Console.ForegroundColor = ConsoleColor.Green;
+
+                    Console.Write(map[y,x]);
+                    Console.ForegroundColor = ConsoleColor.White;
+                }
+                Console.WriteLine();
+            }
+        }
+
+        static void PrintPath()
         {
             Console.WriteLine("================================");
             Console.WriteLine("Path:");
-            var current = dijkstraTable[destination.Position];
-            int heatLoss = 0;
+            var current = pathTable[destination.Position];
             while (current != null)
             {
-                
-                Console.WriteLine($"(X {current.Block.Position.X} | Y {current.Block.Position.Y} ) - {current.Block.HeatLoss}");
+                Console.WriteLine($"(X {current.Block.Position.X} | Y {current.Block.Position.Y} ) - {current.Block.HeatLoss}");                
+                current = current.Previous;
+            }            
+        }
+        static int GetOverallHeatLoss()
+        {            
+            var current = pathTable[destination.Position];
+            int heatLoss = 0;
+            while (current != null)
+            {                         
                 heatLoss += current.Block.HeatLoss;
                 current = current.Previous;
             }
             return heatLoss;
         }
 
-        static Dictionary<(int, int), PathEntry> AStar()
+        static void AStar()
         {
             
-            Dictionary<(int, int), PathEntry> pathTable = new();
+            
 
             QEntry? currentEntry = null;
             CityBlock edgeTarget = null;
@@ -75,7 +114,7 @@ namespace AdventOfCode23.Day17
                 for (Directions d = Directions.Up; d <= Directions.Right; d++)
                 {                    
 
-                    // skip if too many moves in direction or going backwards
+                    // skip if going backwards
                     if (d == OppositeDirectionOf(currentEntry.DirectionToReach))
                     {                        
                         continue;
@@ -138,10 +177,7 @@ namespace AdventOfCode23.Day17
                             pathTable[currentEntry.ReachedFrom.Position]));                    
                 }
             } 
-            while (!currentEntry.Block.Equals(destination));
-
-
-            return pathTable;
+            while (!currentEntry.Block.Equals(destination));            
         }
 
         
@@ -200,7 +236,7 @@ namespace AdventOfCode23.Day17
         static void Init()
         {
             var input = File.ReadAllLines("./input17.txt");            
-            CityBlock[,] city = new CityBlock[input.Length, input[0].Length];            
+            city = new CityBlock[input.Length, input[0].Length];            
             //initialize nodes without edges
             for (int y = 0; y < input.Length; y++)
             {
@@ -246,7 +282,10 @@ namespace AdventOfCode23.Day17
 
         private static double HeuristicValue(int x, int y) 
         {
-            return Math.Sqrt(Math.Pow(x, 2) + Math.Pow(y, 2));
+            int xDistance = city.GetLength(1) - x;
+            int yDistance = city.GetLength(0) - y;
+            return xDistance + (yDistance * 2);
+            //return Math.Sqrt(Math.Pow(x, 2) + Math.Pow(y, 2));
         }       
 
         private static void PrintWithIndent(string message, int indentLevel)
@@ -258,4 +297,5 @@ namespace AdventOfCode23.Day17
             Console.WriteLine(message);
         }
     }
+
 }
