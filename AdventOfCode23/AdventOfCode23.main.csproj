@@ -15,6 +15,7 @@
     <ProjectReference Include="..\AdventOfCode23.Day14\AdventOfCode23.Day14.csproj" />
     <ProjectReference Include="..\AdventOfCode23.Day15\AdventOfCode23.Day15.csproj" />
     <ProjectReference Include="..\AdventOfCode23.Day16\AdventOfCode23.Day16.csproj" />
+    <ProjectReference Include="..\AdventOfCode23.Day17\AdventOfCode23.Day17.csproj" />
     <ProjectReference Include="..\AdventOfCode23.Day1\AdventOfCode23.Day1.csproj" />
     <ProjectReference Include="..\AdventOfCode23.Day2\AdventOfCode23.Day2.csproj" />
     <ProjectReference Include="..\AdventOfCode23.Day3\AdventOfCode23.Day3.csproj" />
