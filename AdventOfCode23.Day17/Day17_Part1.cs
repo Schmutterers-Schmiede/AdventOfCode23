@@ -1,8 +1,10 @@
-﻿namespace AdventOfCode23.Day17
+﻿using System.Text;
+
+namespace AdventOfCode23.Day17
 {
 
-    /* GENERAL IDEA:
-     * build graph from array
+    /* GENERAL IDEA A*:
+     * build graph from input
      * use an enum for directions
      * 
      * calculate heuristic value of each node using pythagorean theorem
@@ -13,7 +15,7 @@
      *  - loop over edges
      *      - skip if 
      *          - edge goes backwards 
-     *          - direction count is 4 and edge continues in same direction
+     *          - direction count is 3 and edge continues in same direction
      *          - node has already been processed
      *          - no edge in that direction
      *      - add to or update in q:
@@ -23,18 +25,28 @@
      *  - add current node to path
      *  
      *  A* explaination: https://www.youtube.com/watch?v=ySN5Wnu88nE
+     *  
+     *  
+     *  create a class BlockNode that is used for both q and path with a property id and idOfPrevious
+     *  calculate unique id from path key data and 
      */
     public class Day17_Part1
     {
+        // settings        
+        static int directionalLimit = 3;
+
         static CityBlock[,] city;
         static CityBlock start;
         static CityBlock destination;
-        static List<QEntry> unvisitedQ = new();
-        static Dictionary<(int, int), PathEntry> pathTable = new();
+        
+        static List<BlockEntry> Q = new();
+        static Dictionary<string, BlockEntry> pathGraph = new();
+        static string destinationId;
+        
 
         public static void Run()
         {
-            Init();
+            Init();    
             AStar();
             var heatloss = GetOverallHeatLoss();
             PrintPath();
@@ -56,20 +68,34 @@
                 }
             }
 
-            var current = pathTable[destination.Position];
+            var current = pathGraph[destinationId];
             
             map[0, 0] = 'X';
             while (!current.Block.Equals(start))
             {
-                map[current.Block.Position.Y, current.Block.Position.X] = 'X';
-                current = current.Previous;
+                switch (current.DirectionToReach)
+                {
+                    case Directions.Up:
+                        map[current.Block.Position.Y, current.Block.Position.X] = '^';
+                        break;
+                    case Directions.Left:
+                        map[current.Block.Position.Y, current.Block.Position.X] = '<';
+                        break;
+                    case Directions.Down:
+                        map[current.Block.Position.Y, current.Block.Position.X] = 'V';
+                        break;
+                    case Directions.Right:
+                        map[current.Block.Position.Y, current.Block.Position.X] = '>';
+                        break;
+                }                
+                current = pathGraph[current.PreviousBlockId];
             } 
 
             for (int y = 0;y < map.GetLength(0); y++)
             {
                 for(int x = 0;x < map.GetLength(1); x++)
                 {
-                    if (map[y,x] == 'X')
+                    if (!char.IsDigit(map[y,x]))
                         Console.ForegroundColor = ConsoleColor.Green;
 
                     Console.Write(map[y,x]);
@@ -83,109 +109,106 @@
         {
             Console.WriteLine("================================");
             Console.WriteLine("Path:");
-            var current = pathTable[destination.Position];
-            while (current != null)
+            var current = pathGraph[destinationId];
+            do
             {
                 Console.WriteLine($"( X {current.Block.Position.X} | Y {current.Block.Position.Y} ) - {current.Block.HeatLoss}");                
-                current = current.Previous;
-            }            
+                current = pathGraph[current.PreviousBlockId];
+            } while(!current.Block.Equals(start));           
         }
+        
         static int GetOverallHeatLoss()
         {            
-            var current = pathTable[destination.Position];
+            var current = pathGraph[destinationId];
             int heatLoss = 0;
-            while (current != null)
+            while (!current.Block.Equals(start))
             {                         
                 heatLoss += current.Block.HeatLoss;
-                current = current.Previous;
+                current = pathGraph[current.PreviousBlockId];
             }
             return heatLoss;
-        }
+        } 
+
+
 
         static void AStar()
         {
-            
-            
-
-            QEntry? currentEntry = null;
+            BlockEntry? currentBlockEntry = null;
             CityBlock edgeTarget = null;
 
             do
             {
-                currentEntry = GetNextInQ();
+                currentBlockEntry = GetNextInQ();
 
-                PrintWithIndent($"Processing ( X {currentEntry.Block.Position.X} | Y {currentEntry.Block.Position.Y} ):", 0);
+                PrintWithIndent($"Processing ( X {currentBlockEntry.Block.Position.X} | Y {currentBlockEntry.Block.Position.Y} ) {currentBlockEntry.Id}:", 0);
 
                 for (Directions d = Directions.Up; d <= Directions.Right; d++)
                 {                    
-
                     // skip if going backwards
-                    if (d == OppositeDirectionOf(currentEntry.DirectionToReach))
-                    {                        
+                    if (d == OppositeDirectionOf(currentBlockEntry.DirectionToReach))
                         continue;
-                    }
+                    
                     // skip if too many moves in same direction
-                    if (d == currentEntry.DirectionToReach &&
-                        currentEntry.DirectionCount == 4)
-                    {                        
+                    if (d == currentBlockEntry.DirectionToReach &&
+                        currentBlockEntry.DirectionCount >= directionalLimit)                                           
                         continue;
-                    }
+                    
                     // skip if no edge in this direction
-                    if (!currentEntry.Block.Edges.ContainsKey(d))
+                    if (!currentBlockEntry.Block.Edges.ContainsKey(d))
                         continue;
 
-                    edgeTarget = currentEntry.Block.Edges[d].Target;
+                    edgeTarget = currentBlockEntry.Block.Edges[d].Target;
+                    var newDirectionCount =
+                        d == currentBlockEntry.DirectionToReach ?
+                        currentBlockEntry.DirectionCount + 1
+                        : 1;
+                    var edgeTargetId = CreateBlockEntryId(edgeTarget.Position, d, newDirectionCount);
 
-                    // skip if node has already been processed
-                    if (pathTable.ContainsKey(edgeTarget.Position))
+
+                    // skip if Block has already been processed
+                    if (pathGraph.ContainsKey(edgeTargetId))
                         continue;
 
                     PrintWithIndent($"Processing Edge {d}", 1);
+                    
+                    
 
                     // neighboring node already in q -> try update
-                    if (QContains(edgeTarget))
-                    {
-                        PrintWithIndent($"Node already in q -> update", 2);
-                        var costToReachEdgeTarget = currentEntry.CostToReach + edgeTarget.HeatLoss;
-                        if (costToReachEdgeTarget < GetQEntryByPosition(edgeTarget.Position).CostToReach)
+                    
+                    var costToReachEdgeTarget = currentBlockEntry.CostToReach + edgeTarget.HeatLoss;
+
+                    if (QContains(edgeTargetId))
+                    {                        
+                        if (costToReachEdgeTarget < GetQEntry(edgeTargetId).CostToReach)
                         {
-                            UpdateQEntry(edgeTarget, costToReachEdgeTarget, d, currentEntry.DirectionCount + 1);
+                            PrintWithIndent($"Node already in q -> update", 2);
+                            UpdateQEntry(edgeTargetId, costToReachEdgeTarget);
                         }
+                        else
+                            PrintWithIndent($"Node already in q -> no update", 2);
                     }
                     // neighboring node not in q -> add
                     else
                     {
                         PrintWithIndent($"Node not in q -> add", 2);
-                        var directionCount = d == currentEntry.DirectionToReach ? currentEntry.DirectionCount + 1 : 1;
                         AddToQ(new(
+                            edgeTargetId,
                             edgeTarget,
-                            currentEntry.Block,
-                            d,
-                            currentEntry.CostToReach + edgeTarget.HeatLoss,
-                            directionCount));
-                    }
-                }
-                if (currentEntry.Block.Equals(start))
-                {
-                    pathTable.Add(
-                        currentEntry.Block.Position,
-                        new(
-                            currentEntry.Block,
-                            null));
-                }
-                else
-                {
-                    pathTable.Add(
-                        currentEntry.Block.Position,
-                        new(
-                            currentEntry.Block,
-                            pathTable[currentEntry.ReachedFrom.Position]));                    
-                }
-            } 
-            while (!currentEntry.Block.Equals(destination));            
-        }
+                            currentBlockEntry.Id,
+                            costToReachEdgeTarget,        
+                            d,                            
+                            newDirectionCount));                        
+                    }                    
+                }   
+                                
+                if (currentBlockEntry.Block.Equals(destination)) 
+                    destinationId = currentBlockEntry.Id;
 
-        
+                pathGraph.Add(currentBlockEntry.Id, currentBlockEntry);
+            } 
+            while (!currentBlockEntry.Block.Equals(destination));            
+        }        
+
         static Directions OppositeDirectionOf(Directions direction)
         {
             switch (direction)
@@ -199,47 +222,43 @@
         }
 
         private static void UpdateQEntry(
-            CityBlock b,
-            int costToReach,
-            Directions directionToReach,
-            int directionCount)
+            string id,            
+            int newCostToReach)
         {
-            var entryToUpdate = unvisitedQ.Where((QEntry e) => e.Block.Equals(b)).First();
-            entryToUpdate.CostToReach = costToReach;
-            entryToUpdate.DirectionCount = directionCount;
-            entryToUpdate.DirectionToReach = directionToReach;
-            SortQ();
+            var entryToUpdate = Q.Where((BlockEntry e) => e.Id == id).First();
+            entryToUpdate.CostToReach = newCostToReach;                        
         }
 
-        private static QEntry GetNextInQ()
+        private static BlockEntry GetNextInQ()
         {
-            var next = unvisitedQ.First();
-            unvisitedQ.Remove(next);
+            var next = Q.OrderBy((BlockEntry e) => e.CombinedCost()).ToList().First();
+            Q.Remove(next);
             return next;
+        }        
+
+        private static bool QContains(string id)
+        {
+            return Q.Any(e => e.Id == id);            
         }
 
-        private static void SortQ()
-        {
-            unvisitedQ = unvisitedQ.OrderBy((QEntry e) => e.CombinedCost()).ToList();
+        private static string CreateBlockEntryId((int x, int y) pos, Directions d, int directionCount)
+        {            
+            return new StringBuilder().Append(Convert.ToString(pos.x))
+                .Append(Convert.ToString(pos.y))
+                .Append(Convert.ToString((int)d))
+                .Append(Convert.ToString(directionCount))
+                .ToString();
+            
         }
 
-        private static bool QContains(CityBlock c)
+        private static BlockEntry GetQEntry(string id)
         {
-            return unvisitedQ.Where((QEntry x) => x.Block.Equals(c)).Count() == 1;
+            return Q.Where(e => e.Id == id).First();            
         }
 
-        private static QEntry GetQEntryByPosition((int x, int y) pos)
-        {
-            return unvisitedQ.Where((QEntry e) => e.Block.Position == pos).First();
-        }
-
-        private static void AddToQ(QEntry e)
-        {
-            if(e.DirectionCount != 4)
-            {
-                unvisitedQ.Add(e);
-                SortQ();
-            }
+        private static void AddToQ(BlockEntry e)
+        {            
+                Q.Add(e);                                   
         }
 
         static void Init()
@@ -279,19 +298,20 @@
             }
 
             //direction to reach does not matter at start
-            AddToQ(                
-                new (
+            AddToQ(
+                new(
+                id: CreateBlockEntryId(start.Position, Directions.Nowhere, 0),
                 block: start,
-                reachedFrom: null,
+                previousBlockId: "0",
+                costToReach: 0,
                 directionToReach: Directions.Nowhere,
-                costToReach: 2,
                 directionCount: 0)
-                );            
+                );             
         }
 
         private static double HeuristicValue(int x, int y) 
         {
-            // return 0;
+            //return 0;
             int xDistance = city.GetLength(1) - x - 1;
             int yDistance = city.GetLength(0) - y - 1;            
             return Math.Sqrt(Math.Pow(xDistance, 2) + Math.Pow(yDistance, 2));
