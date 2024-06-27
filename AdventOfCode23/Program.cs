@@ -18,6 +18,7 @@ using AdventOfCode23.Day15;
 using AdventOfCode23.Day16;
 using System.Runtime.CompilerServices;
 using AdventOfCode23.Day17;
+using AdventOfCode23.Day18.Part1;
 
 public class Program
 {
@@ -72,7 +73,9 @@ public class Program
         //Day16_Part2.Run();
 
         //Day17_Part1.Run();
-        Day17_Part2.Run();
+        //Day17_Part2.Run();
+
+        Day18_Part1.Run();
 
     }
     
