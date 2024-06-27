@@ -1,4 +1,4 @@
-﻿namespace AdventOfCode23.Day17
+﻿namespace AdventOfCode23.Day17.Common
 {
     public class BlockEntry
     {
@@ -12,7 +12,7 @@
         {
             Id = id;
             Block = block;
-            PreviousBlockId = previousBlockId;            
+            PreviousBlockId = previousBlockId;
             CostToReach = costToReach;
             DirectionToReach = directionToReach;
             DirectionCount = directionCount;

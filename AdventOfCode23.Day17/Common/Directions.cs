@@ -1,4 +1,4 @@
-﻿namespace AdventOfCode23.Day17
+﻿namespace AdventOfCode23.Day17.Common
 {
     public enum Directions : int
     {

@@ -1,39 +1,13 @@
-﻿using System.Text;
+﻿using AdventOfCode23.Day17.Common;
+using System.Text;
 
 namespace AdventOfCode23.Day17
-{
-
-    /* GENERAL IDEA A*:
-     * build graph from input
-     * use an enum for directions
-     * 
-     * calculate heuristic value of each node using pythagorean theorem
-     * 
-     * main loop: 
-     *  - get next node from q
-     *  
-     *  - loop over edges
-     *      - skip if 
-     *          - edge goes backwards 
-     *          - direction count is 3 and edge continues in same direction
-     *          - node has already been processed
-     *          - no edge in that direction
-     *      - add to or update in q:
-     *          - is this node in the q? (check with position)
-     *              - if yes, update directionToReach, CostToReach and DirectionCount if necessary
-     *              - if not, add it to q and sort q                 
-     *  - add current node to path
-     *  
-     *  A* explaination: https://www.youtube.com/watch?v=ySN5Wnu88nE
-     *  
-     *  
-     *  create a class BlockNode that is used for both q and path with a property id and idOfPrevious
-     *  calculate unique id from path key data and 
-     */
-    public class Day17_Part1
+{    
+    public class Day17_Part2
     {
         // settings        
-        static int directionalLimit = 3;
+        static int directionalLimit = 10;
+        static int directionalMinimum = 4;
 
         static CityBlock[,] city;
         static CityBlock start;
@@ -135,6 +109,9 @@ namespace AdventOfCode23.Day17
         {
             BlockEntry? currentBlockEntry = null;
             CityBlock edgeTarget = null;
+            int newDirectionCount;
+            int costToReachEdgeTarget;
+            string edgeTargetId;
 
             do
             {
@@ -150,19 +127,26 @@ namespace AdventOfCode23.Day17
                     
                     // skip if too many moves in same direction
                     if (d == currentBlockEntry.DirectionToReach &&
-                        currentBlockEntry.DirectionCount >= directionalLimit)                                           
+                        currentBlockEntry.DirectionCount == directionalLimit)                                           
                         continue;
                     
+                    // skip turn if not enough moves in the same direction
+                    if (!(d == currentBlockEntry.DirectionToReach) &&
+                        currentBlockEntry.DirectionCount < directionalMinimum &&
+                        currentBlockEntry.DirectionToReach != Directions.Nowhere)
+                        continue;
+
                     // skip if no edge in this direction
                     if (!currentBlockEntry.Block.Edges.ContainsKey(d))
                         continue;
 
+
                     edgeTarget = currentBlockEntry.Block.Edges[d].Target;
-                    var newDirectionCount =
+                    newDirectionCount =
                         d == currentBlockEntry.DirectionToReach ?
                         currentBlockEntry.DirectionCount + 1
                         : 1;
-                    var edgeTargetId = CreateBlockEntryId(edgeTarget.Position, d, newDirectionCount);
+                    edgeTargetId = CreateBlockEntryId(edgeTarget.Position, d, newDirectionCount);
 
 
                     // skip if Block has already been processed
@@ -171,12 +155,9 @@ namespace AdventOfCode23.Day17
 
                     PrintWithIndent($"Processing Edge {d}", 1);
                     
-                    
+                    costToReachEdgeTarget = currentBlockEntry.CostToReach + edgeTarget.HeatLoss;
 
                     // neighboring node already in q -> try update
-                    
-                    var costToReachEdgeTarget = currentBlockEntry.CostToReach + edgeTarget.HeatLoss;
-
                     if (QContains(edgeTargetId))
                     {                        
                         if (costToReachEdgeTarget < GetQEntry(edgeTargetId).CostToReach)
@@ -199,14 +180,11 @@ namespace AdventOfCode23.Day17
                             d,                            
                             newDirectionCount));                        
                     }                    
-                }   
-                                
-                if (currentBlockEntry.Block.Equals(destination)) 
-                    destinationId = currentBlockEntry.Id;
-
+                }                   
                 pathGraph.Add(currentBlockEntry.Id, currentBlockEntry);
             } 
-            while (!currentBlockEntry.Block.Equals(destination));            
+            while (!currentBlockEntry.Block.Equals(destination));
+            destinationId = currentBlockEntry.Id;
         }        
 
         static Directions OppositeDirectionOf(Directions direction)
@@ -242,13 +220,8 @@ namespace AdventOfCode23.Day17
         }
 
         private static string CreateBlockEntryId((int x, int y) pos, Directions d, int directionCount)
-        {            
-            return new StringBuilder().Append(Convert.ToString(pos.x))
-                .Append(Convert.ToString(pos.y))
-                .Append(Convert.ToString((int)d))
-                .Append(Convert.ToString(directionCount))
-                .ToString();
-            
+        {
+            return $"{pos.x};{pos.y};{d};{directionCount}";                            
         }
 
         private static BlockEntry GetQEntry(string id)
@@ -263,7 +236,7 @@ namespace AdventOfCode23.Day17
 
         static void Init()
         {
-            var input = File.ReadAllLines("./input17.txt");            
+            var input = File.ReadAllLines("Common/input17.txt");            
             city = new CityBlock[input.Length, input[0].Length];            
             //initialize nodes without edges
             for (int y = 0; y < input.Length; y++)
