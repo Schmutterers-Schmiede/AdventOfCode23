@@ -6,7 +6,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
-namespace AdventOfCode23.Day18.Part1
+namespace AdventOfCode23.Day18
 {
     public class Day18_Part1
     {

@@ -1,5 +1,4 @@
-﻿namespace AdventOfCode23.main;
-using AdventOfCode23;
+﻿using AdventOfCode23;
 using AdventOfCode23.Day1;
 using AdventOfCode23.Day2;
 using AdventOfCode23.Day3;
@@ -16,10 +15,11 @@ using AdventOfCode23.Day13;
 using AdventOfCode23.Day14;
 using AdventOfCode23.Day15;
 using AdventOfCode23.Day16;
-using System.Runtime.CompilerServices;
 using AdventOfCode23.Day17;
-using AdventOfCode23.Day18.Part1;
+using AdventOfCode23.Day18;
+using AdventOfCode23.Day19;
 
+namespace AdventOfCode23.main;
 public class Program
 {
     private static void Main(string[] args)
@@ -75,8 +75,11 @@ public class Program
         //Day17_Part1.Run();
         //Day17_Part2.Run();
 
-        Day18_Part1.Run();
+        //Day18_Part1.Run();
+        //Day18_Part2.Run();        
 
+        //Day19_Part1.Run();
+        Day19_Part2.Run();
     }
     
 }
