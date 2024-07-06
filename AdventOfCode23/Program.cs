@@ -18,6 +18,9 @@ using AdventOfCode23.Day16;
 using AdventOfCode23.Day17;
 using AdventOfCode23.Day18;
 using AdventOfCode23.Day19;
+using AdventOfCode23.Day20;
+using AdventOfCode23.Day21;
+using AdventOfCode23.Day22;
 
 namespace AdventOfCode23.main;
 public class Program
@@ -79,7 +82,15 @@ public class Program
         //Day18_Part2.Run();        
 
         //Day19_Part1.Run();
-        Day19_Part2.Run();
+        //Day19_Part2.Run();
+
+        //Day20_Part1.Run();
+        //Day20_Part2.Run();
+
+        //Day21_Part1.Run();
+        //Day21_Part2.Run();
+
+        Day22_Part1.Run();
     }
     
 }
