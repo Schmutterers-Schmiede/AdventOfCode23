@@ -6,6 +6,7 @@ namespace AdventOfCode23.Day22
 {
     internal class Brick(short id, Point3d start, Point3d end)
     {
+        public Brick(Brick b) : this(b.Id, new (b.Start), new(b.End)) { }
         public short Id { get; set; } = id;        
         public Point3d Start { get; set; } = start;
         public Point3d End { get; set; } = end;        

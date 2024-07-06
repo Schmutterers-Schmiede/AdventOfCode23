@@ -90,7 +90,8 @@ public class Program
         //Day21_Part1.Run();
         //Day21_Part2.Run();
 
-        Day22_Part1.Run();
+        //Day22_Part1.Run();
+        Day22_Part2.Run();
     }
     
 }
