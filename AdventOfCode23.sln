@@ -43,11 +43,13 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AdventOfCode23.Day18", "Adv
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AdventOfCode23.Day19", "AdventOfcode23.Day19\AdventOfCode23.Day19.csproj", "{9D61D9C4-3B2C-453E-9385-2BF3F90D6DD5}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AdventOfCode23.Day20", "AdventOfCode23.Day20\AdventOfCode23.Day20.csproj", "{09460B21-4FA6-4E1B-BB9E-CFFB038285E0}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AdventOfCode23.Day20", "AdventOfCode23.Day20\AdventOfCode23.Day20.csproj", "{09460B21-4FA6-4E1B-BB9E-CFFB038285E0}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AdventOfCode23.Day21", "AdventOfCode23.Day21\AdventOfCode23.Day21.csproj", "{9A683D99-A1DB-4721-88D5-91E7B36067C4}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AdventOfCode23.Day21", "AdventOfCode23.Day21\AdventOfCode23.Day21.csproj", "{9A683D99-A1DB-4721-88D5-91E7B36067C4}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AdventOfCode23.Day22", "AdventOfCode23.Day22\AdventOfCode23.Day22.csproj", "{5481FF58-3E8C-4742-9ABD-4C62367F58FD}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AdventOfCode23.Day22", "AdventOfCode23.Day22\AdventOfCode23.Day22.csproj", "{5481FF58-3E8C-4742-9ABD-4C62367F58FD}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AdventOfCode23.Day23", "AdventOfCode23.Day23\AdventOfCode23.Day23.csproj", "{806916FF-9A37-4393-AC82-7C64D326D045}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -147,6 +149,10 @@ Global
 		{5481FF58-3E8C-4742-9ABD-4C62367F58FD}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5481FF58-3E8C-4742-9ABD-4C62367F58FD}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{5481FF58-3E8C-4742-9ABD-4C62367F58FD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{806916FF-9A37-4393-AC82-7C64D326D045}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{806916FF-9A37-4393-AC82-7C64D326D045}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{806916FF-9A37-4393-AC82-7C64D326D045}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{806916FF-9A37-4393-AC82-7C64D326D045}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
