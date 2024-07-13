@@ -8,6 +8,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\AdventOfCode2023.Day24\AdventOfCode23.Day24.csproj" />
     <ProjectReference Include="..\AdventOfCode23.Day10\AdventOfCode23.Day10.csproj" />
     <ProjectReference Include="..\AdventOfCode23.Day11\AdventOfCode23.Day11.csproj" />
     <ProjectReference Include="..\AdventOfCode23.Day12\AdventOfCode23.Day12.csproj" />
@@ -23,6 +24,7 @@
     <ProjectReference Include="..\AdventOfCode23.Day21\AdventOfCode23.Day21.csproj" />
     <ProjectReference Include="..\AdventOfCode23.Day22\AdventOfCode23.Day22.csproj" />
     <ProjectReference Include="..\AdventOfCode23.Day23\AdventOfCode23.Day23.csproj" />
+    <ProjectReference Include="..\AdventOfCode23.Day25\AdventOfCode23.Day25.csproj" />
     <ProjectReference Include="..\AdventOfCode23.Day2\AdventOfCode23.Day2.csproj" />
     <ProjectReference Include="..\AdventOfCode23.Day3\AdventOfCode23.Day3.csproj" />
     <ProjectReference Include="..\AdventOfCode23.Day4\AdventOfCode23.Day4.csproj" />
